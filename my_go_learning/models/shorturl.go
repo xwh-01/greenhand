@@ -1,13 +1,19 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type ShortURL struct {
-	ID         int       `json:"id"`
-	ShortCode  string    `json:"short_code"`
-	LongURL    string    `json:"long_url"`
+	ID         int       `gorm:"primaryKey" json:"id"`
+	ShortCode  string    `gorm:"size:10;uniqueIndex;not null" json:"short_code"`
+	LongURL    string    `gorm:"type:text;not null" json:"long_url"`
 	CreatedAt  time.Time `json:"created_at"`
-	ClickCount int       `json:"click_count"`
+	ClickCount int       `gorm:"default:0"json:"click_count"`
+}
+
+func (ShortURL) TableName() string {
+	return "short_urls"
 }
 
 func NewShortURL(shortCode, longURL string) *ShortURL {
